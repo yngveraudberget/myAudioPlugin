@@ -22,8 +22,8 @@ PluginTestAudioProcessorEditor::PluginTestAudioProcessorEditor (PluginTestAudioP
     gainSlider.setSliderStyle(Slider::SliderStyle::Rotary);
     gainSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 100,20);
     gainSlider.setRange(-48.0f, 0.0f, 0.1);
-    gainSlider.setValue(-5.0f);
-    addAndMakeVisible(gainSlider);
+    //gainSlider.setValue(-5.0f);
+    addAndMakeVisible(&gainSlider);
 }
 
 PluginTestAudioProcessorEditor::~PluginTestAudioProcessorEditor()

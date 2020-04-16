@@ -23,10 +23,11 @@ PluginTestAudioProcessor::PluginTestAudioProcessor()
 #endif
     ),
     treeState(*this, nullptr, "PARAMETER", { createParamterLayout()})
+   
     //treeState(*this, nullptr, "PARAMETER", { std::make_unique<AudioParameterFloat>(GAIN_ID, GAIN_NAME, -48.0f, 0.0f, -15.0f)})
 #endif
 {
-    
+    treeState.state = ValueTree("savedparams");
 }
 
 PluginTestAudioProcessor::~PluginTestAudioProcessor()
@@ -187,12 +188,21 @@ void PluginTestAudioProcessor::getStateInformation (MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+
+    std::unique_ptr<XmlElement> xml(treeState.state.createXml());
+    copyXmlToBinary(*xml, destData);
 }
 
 void PluginTestAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<XmlElement> theParams = getXmlFromBinary(data, sizeInBytes);
+    if (theParams != nullptr) {
+        if (theParams->hasTagName(treeState.state.getType())) {
+            treeState.state = ValueTree::fromXml(*theParams);
+        }
+    }
 }
 
 //==============================================================================
